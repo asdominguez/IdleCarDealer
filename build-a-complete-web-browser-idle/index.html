@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Dealer Empire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Idle dealership builder</p>
+        <h1>Car Dealer Empire</h1>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <span>Cash</span>
+          <strong id="cash">$0</strong>
+        </div>
+        <div>
+          <span>Auction Credits</span>
+          <strong id="auctionCredits">0 AC</strong>
+        </div>
+        <div>
+          <span>Prestige</span>
+          <strong id="prestigeLevel">0</strong>
+        </div>
+        <div>
+          <span>Prestige Tokens</span>
+          <strong id="prestigeTokens">0 PT</strong>
+        </div>
+        <div>
+          <span>Income Bonus</span>
+          <strong id="prestigeBonus">+0%</strong>
+        </div>
+        <div>
+          <span>Income / sec</span>
+          <strong id="incomePerSecond">$0/s</strong>
+        </div>
+      </div>
+    </section>
+
+    <section id="offlineNotice" class="notice hidden"></section>
+
+    <nav class="screen-nav" aria-label="Game screens">
+      <button class="screen-button active" data-screen="main" type="button">Dealership</button>
+      <button class="screen-button" data-screen="prestige" type="button">Prestige Upgrades</button>
+      <button class="screen-button" data-screen="auction" type="button">Auction House</button>
+      <button class="screen-button" data-screen="carShow" type="button">Car Shows</button>
+    </nav>
+
+    <section id="mainScreen" class="game-screen active">
+      <section class="dashboard">
+        <article class="panel clicker-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Lease desk</p>
+              <h2>Lease fleet</h2>
+            </div>
+            <span id="carsOwned" class="pill">1 car</span>
+          </div>
+          <button id="collectButton" class="collect-button" type="button">
+            <span>Collect Lease Money</span>
+            <small id="clickValue">$1 per click</small>
+          </button>
+          <div class="action-row">
+            <div>
+              <span class="label">Next leased car</span>
+              <strong id="leasedCarPrice">$15</strong>
+            </div>
+            <button id="buyLeasedCar" type="button">Buy Leased Car</button>
+          </div>
+        </article>
+
+        <article class="panel prestige-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Next reset</p>
+              <h2>Prestige</h2>
+            </div>
+          </div>
+          <div class="requirement-list" id="prestigeRequirements"></div>
+          <button id="prestigeButton" class="prestige-button" type="button" disabled>Prestige at $10.0B</button>
+          <div class="save-row">
+            <span id="saveStatus">Save ready</span>
+            <button id="resetSave" class="ghost-button" type="button">Reset Save</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="business-grid" id="businessGrid" aria-label="Passive income businesses"></section>
+
+      <section class="panel upgrades-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Business upgrades</p>
+            <h2>Next available upgrades</h2>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Upgrade filters">
+            <button class="tab active" data-tab="all" type="button">All</button>
+            <button class="tab" data-tab="turo" type="button">Turo</button>
+            <button class="tab" data-tab="lots" type="button">Used Lots</button>
+            <button class="tab" data-tab="luxury" type="button">Luxury</button>
+            <button class="tab" data-tab="newDealerships" type="button">New Cars</button>
+            <button class="tab" data-tab="manufacturerDealerships" type="button">Manufacturer</button>
+          </div>
+          <button id="passiveUpgradesToggle" class="dropdown-toggle" type="button" aria-expanded="true" aria-controls="passiveUpgradesBody">Hide</button>
+        </div>
+        <div id="passiveUpgradesBody" class="dropdown-body">
+          <div id="upgradeGrid" class="upgrade-grid"></div>
+        </div>
+      </section>
+    </section>
+
+    <section id="prestigeScreen" class="game-screen panel prestige-upgrades-panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Permanent progression</p>
+          <h2>Prestige upgrades</h2>
+        </div>
+        <div class="dropdown-actions">
+          <span class="pill" id="prestigeTokenPill">0 PT</span>
+          <button class="screen-button compact" data-screen="main" type="button">Back</button>
+        </div>
+      </div>
+      <p id="prestigeDescription" class="screen-intro">Permanent upgrades spend Prestige Tokens and stay active through every reset.</p>
+      <div id="prestigeUpgradesBody" class="dropdown-body">
+        <div id="prestigeUpgradeGrid" class="prestige-upgrade-grid"></div>
+      </div>
+    </section>
+
+    <section class="game-screen panel auction-panel" id="auctionScreen">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Prestige 1 operation</p>
+          <h2>Auction House</h2>
+        </div>
+        <div class="dropdown-actions">
+          <span class="pill" id="auctionUnlockState">Locked</span>
+          <button class="screen-button compact" data-screen="main" type="button">Back</button>
+        </div>
+      </div>
+
+      <div id="auctionLocked" class="locked-message">
+        Own 20 New Car Dealerships to unlock vehicle auctions, parking spaces, appraisals, and flips.
+      </div>
+
+      <div id="auctionContent" class="auction-content hidden">
+        <div class="auction-toolbar">
+          <div class="metric">
+            <span>Auction Credits</span>
+            <strong id="auctionCreditsPanel">0 AC</strong>
+          </div>
+          <div class="metric">
+            <span>Parking</span>
+            <strong id="parkingStatus">0 / 1 used</strong>
+          </div>
+          <button id="convertCashToCredits" type="button">Convert $1.0T to 1 AC</button>
+          <button id="convertCreditsToCash" type="button">Convert 1 AC to $750.0B</button>
+          <button id="buyParking" type="button">Buy Parking</button>
+        </div>
+
+        <div class="auction-tabs" role="tablist" aria-label="Auction views">
+          <button class="auction-tab active" data-auction-tab="auction" type="button">Active Auction</button>
+          <button class="auction-tab" data-auction-tab="vehicles" type="button">Owned Vehicles</button>
+        </div>
+
+        <div id="activeAuctionView" class="auction-view"></div>
+        <div id="ownedVehiclesView" class="auction-view hidden"></div>
+      </div>
+    </section>
+
+    <section class="game-screen panel car-show-panel" id="carShowScreen">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Prestige 2 feature</p>
+          <h2>Car Shows</h2>
+        </div>
+        <div class="dropdown-actions">
+          <span class="pill" id="carShowUnlockState">Locked</span>
+          <button class="screen-button compact" data-screen="main" type="button">Back</button>
+        </div>
+      </div>
+      <div id="carShowLocked" class="locked-message">Reach Prestige 2 and build enough cash to unlock high-end show competitions.</div>
+      <div id="carShowContent" class="car-show-content hidden">
+        <div class="car-show-summary">
+          <div class="metric"><span>Entry fee</span><strong>$5.0T</strong></div>
+          <div class="metric"><span>1st place</span><strong>$25.0T</strong></div>
+          <div class="metric"><span>2nd place</span><strong>$10.0T</strong></div>
+          <div class="metric"><span>3rd place</span><strong>$5.0T</strong></div>
+        </div>
+        <div id="carShowGarage"></div>
+        <div id="carShowEntries"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
